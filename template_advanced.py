@@ -1,3 +1,4 @@
+    test = 5
 from io import BytesIO
 import tokenize
 import token
