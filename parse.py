@@ -1,39 +1,48 @@
-from io import BytesIO
+from io import BytesIO, StringIO
 import tokenize
 import token
 import keyword
 
 
 if __name__ == '__main__':
-    # Treats source code to be parsed as bytes like file in memory
-    src = BytesIO(open('template_advanced.py', 'r').read().encode('utf-8'))
+    # Treats source code to be parsed as file in memory
+    src = BytesIO(open('template.py', 'r').read().encode('utf-8'))
+    src_t = BytesIO(open('template.py', 'r').read().encode('utf-8'))
+
+    tokenized = tokenize.tokenize(src_t.readline)
+
+    # Skip encoding line
+    next(tokenized)
+
+    all_tokens = [[]]
+    all_lexemes = [[]]
+
+    for t in tokenized:
+        type = token.tok_name[t.type]
+        all_tokens[-1].append(type)
+        all_lexemes[-1].append(t.string)
+        if type in ['NEWLINE', 'NL']:
+            all_tokens.append([])
+            all_lexemes.append([])
+
 
     # String for storing the html to be generated for parsing the source
     html = ''
 
     # For each line in the source code
-    for line in src:
+    for line, tokens, lexemes in zip(src, all_tokens, all_lexemes):
+        # Get plain text of source
+        line = line.decode('utf-8')
+        line = line.replace('\n', '')
+
         # Start off by opening a li tag for the html generation
         li = '<li>\n\t'
 
-        # Store line as plain text
-        plain = line.decode('utf-8').replace('\n', '')
-
-        # Strip lexemes from line
-        tokens = tokenize.tokenize(BytesIO(line).readline)
-        lexemes = [t.string for t in tokens]
-        lexemes = lexemes[1:-1]
-
-        # Strip tokens from line
-        tokens = tokenize.tokenize(BytesIO(line).readline)
-        tokens = [token.tok_name[t.type] for t in tokens]
-        tokens = tokens[1:-1]
-
         first = True
-        for lex, tok in zip(lexemes, tokens):
+        for tok, lex in zip(tokens, lexemes):
             if first:
                 first = False
-                indent = lex.count('\t')
+                indent = line.count('\t')
                 li += '<span class="indent-level-{}"></span>'.format(indent)
 
             if keyword.iskeyword(lex):
@@ -57,9 +66,10 @@ if __name__ == '__main__':
         html += li
 
         # For debugging
-        # print(plain)
+        # print(line)
         # print(lexemes)
         # print(tokens)
+        # print()
         print(li)
 
     # Skip encoding line
