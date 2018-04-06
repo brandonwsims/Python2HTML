@@ -3,19 +3,36 @@ import tokenize
 import token
 import keyword
 
+msg = ''
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
+msg += 'Hey this is my multiline message. Hey this is my multiline message.'
 
+# Comment
 if __name__ == '__main__':
 	src = BytesIO(open('parse.py', 'r').read().encode('utf-8'))
 	src = tokenize.tokenize(src.readline)
 
+	# Comment that's tabbed over
 	tokens = [[]]
-	text = [[1, 2, 3], ['4', '5', '6'], [1, 2, 3], ['4', '5', '6']]
+	text = [
+		[1, 2, 3],
+		[
+			'4',
+			'5',
+			'6'
+		],
+		[1, 2, 3], ['4', '5', '6']
+	]
 
 	next(src)
 
 	for t in src:
 		type = token.tok_name[t.type]
-
 		tokens[-1].append(type)
 		text[-1].append(t.string)
 
@@ -24,7 +41,6 @@ if __name__ == '__main__':
 			text.append([])
 
 	indent = 0
-
 	html = ''
 
 	for t_line, t_str in zip(tokens, text):
@@ -72,5 +88,3 @@ if __name__ == '__main__':
 
 		html += li
 		print(li)
-
-		pass

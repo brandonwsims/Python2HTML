@@ -6,8 +6,8 @@ import keyword
 
 if __name__ == '__main__':
     # Treats source code to be parsed as file in memory
-    src = BytesIO(open('template.py', 'r').read().encode('utf-8'))
-    src_t = BytesIO(open('template.py', 'r').read().encode('utf-8'))
+    src = BytesIO(open('template_advanced.py', 'r').read().encode('utf-8'))
+    src_t = BytesIO(open('template_advanced.py', 'r').read().encode('utf-8'))
 
     tokenized = tokenize.tokenize(src_t.readline)
 
